@@ -3,25 +3,22 @@ package com.durys.jakub.chatservice.message;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
 class MessageController {
 
-    private final SimpMessagingTemplate messagingTemplate;
+    private final MessageService messageService;
 
-    MessageController(SimpMessagingTemplate messagingTemplate) {
-        this.messagingTemplate = messagingTemplate;
+    MessageController(MessageService messageService) {
+        this.messageService = messageService;
     }
 
     @MessageMapping("/messages")
-    void handleMessage(@Payload String message) {
-
-        log.info(message);
-
-        messagingTemplate.convertAndSend("/topic/messages", message);
+    void handleMessage(@Payload MessageDTO message) {
+        log.info(message.toString());
+        messageService.handleMessage(message);
     }
 
 }
