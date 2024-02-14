@@ -1,5 +1,6 @@
 package com.durys.jakub.chatservice.message;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.cassandra.core.cql.Ordering;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
@@ -10,6 +11,7 @@ import java.time.Instant;
 
 @Table
 @Data
+@AllArgsConstructor
 public class Message {
 
     @PrimaryKeyColumn(type = PrimaryKeyType.PARTITIONED)
