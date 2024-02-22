@@ -2,6 +2,7 @@ package com.durys.jakub.chatservice.message;
 
 import com.durys.jakub.chatservice.shared.IdentifierGenerator;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -13,24 +14,24 @@ class MessageService {
     private final MessageRepository messageRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final IdentifierGenerator identifierGenerator;
+    private final MessagePersistenceService messagePersistenceService;
+
 
     MessageService(MessageRepository messageRepository, SimpMessagingTemplate messagingTemplate,
-                   IdentifierGenerator identifierGenerator) {
+                   IdentifierGenerator identifierGenerator, MessagePersistenceService messagePersistenceService) {
         this.messageRepository = messageRepository;
         this.messagingTemplate = messagingTemplate;
         this.identifierGenerator = identifierGenerator;
+        this.messagePersistenceService = messagePersistenceService;
     }
 
     void handleMessage(Long channelId, MessageDTO message) {
         messagingTemplate.convertAndSend("/topic/messages/%d".formatted(channelId), message);
-        saveMessage(channelId, message);
+        messagePersistenceService.saveMessage(channelId, message);
     }
 
 
-    void saveMessage(Long channelId, MessageDTO message) {
-        var entity = new Message(channelId, identifierGenerator.next(), 1L, 2L, message.getText(), Instant.now());
-        messageRepository.save(entity);
-    }
+
 
     void retrieveMessages() {
 
