@@ -21,14 +21,14 @@ class MessageService {
         this.identifierGenerator = identifierGenerator;
     }
 
-    void handleMessage(MessageDTO message) {
-        messagingTemplate.convertAndSend("/topic/messages", message);
-        saveMessage(message);
+    void handleMessage(Long channelId, MessageDTO message) {
+        messagingTemplate.convertAndSend("/topic/messages/%d".formatted(channelId), message);
+        saveMessage(channelId, message);
     }
 
 
-    void saveMessage(MessageDTO message) {
-        var entity = new Message(1L, identifierGenerator.next(), 1L, 2L, message.getText(), Instant.now());
+    void saveMessage(Long channelId, MessageDTO message) {
+        var entity = new Message(channelId, identifierGenerator.next(), 1L, 2L, message.getText(), Instant.now());
         messageRepository.save(entity);
     }
 

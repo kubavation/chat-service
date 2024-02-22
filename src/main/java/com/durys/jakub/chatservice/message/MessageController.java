@@ -2,6 +2,7 @@ package com.durys.jakub.chatservice.message;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +20,10 @@ class MessageController {
         this.messageService = messageService;
     }
 
-    @MessageMapping("/messages")
-    void handleMessage(@Payload MessageDTO message) {
+    @MessageMapping("/messages/{channelId}")
+    void handleMessage(@Payload MessageDTO message, @DestinationVariable Long channelId) {
         log.info(message.toString());
-        messageService.handleMessage(message);
+        messageService.handleMessage(channelId, message);
     }
 
 
