@@ -5,15 +5,21 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
+import java.util.Objects;
+
 @RestController
 @Slf4j
 class MessageController {
 
+    private static final String USER_ID = "user-id";
     private final MessageService messageService;
 
     MessageController(MessageService messageService) {
@@ -29,13 +35,20 @@ class MessageController {
 
     @EventListener
     public void handleSessionConnected(SessionConnectEvent event) {
-        log.info(event.toString());
+
+        log.info("{} connected", retrieveUsername(event));
+    }
+
+    private static String retrieveUsername(SessionConnectEvent event) {
+        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        return headerAccessor.getFirstNativeHeader(USER_ID);
     }
 
     @EventListener
     public void handleSessionConnected(SessionSubscribeEvent event) {
-        log.info(event.toString());
-        messageService.retrieveMessages();
+
+        final String destination = SimpMessageHeaderAccessor.wrap(event.getMessage()).getDestination();
+        log.info(destination);
     }
 
     @EventListener
