@@ -19,7 +19,6 @@ import java.util.Objects;
 @Slf4j
 class MessageController {
 
-    private static final String USER_ID = "user-id";
     private final MessageService messageService;
 
     MessageController(MessageService messageService) {
@@ -33,16 +32,6 @@ class MessageController {
     }
 
 
-    @EventListener
-    public void handleSessionConnected(SessionConnectEvent event) {
-
-        log.info("{} connected", retrieveUsername(event));
-    }
-
-    private static String retrieveUsername(SessionConnectEvent event) {
-        StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        return headerAccessor.getFirstNativeHeader(USER_ID);
-    }
 
     @EventListener
     public void handleSessionConnected(SessionSubscribeEvent event) {
