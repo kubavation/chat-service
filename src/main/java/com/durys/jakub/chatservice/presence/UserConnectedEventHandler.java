@@ -1,4 +1,4 @@
-package com.durys.jakub.chatservice.connection;
+package com.durys.jakub.chatservice.presence;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
