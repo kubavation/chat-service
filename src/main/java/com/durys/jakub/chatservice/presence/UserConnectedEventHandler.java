@@ -24,7 +24,6 @@ class UserConnectedEventHandler {
         log.info("{} connected", userId);
 
         presenceService.notifyAboutPresence(userId);
-
     }
 
     private static String retrieveUserId(SessionConnectEvent event) {

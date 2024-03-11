@@ -1,11 +1,12 @@
 package com.durys.jakub.chatservice.ws;
 
-public enum WsUri {
-    CHAT("/topic/messages/%d");
+public enum WsURI {
+    CHAT("/topic/messages/%d"),
+    PRESENCE("/topic/presence/%d");
 
     private final String uri;
 
-    WsUri(String uri) {
+    WsURI(String uri) {
         this.uri = uri;
     }
 
